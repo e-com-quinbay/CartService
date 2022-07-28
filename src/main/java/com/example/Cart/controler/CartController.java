@@ -18,25 +18,26 @@ public class CartController {
     CartService cartService;
 
     @GetMapping(value="/cart/{id}")
-    public Cart getCart(@PathVariable("id") Integer id)
+    public CartReturn getCart(@PathVariable("id") Integer id)
     {
         return cartService.getCart(id);
     }
 
     @DeleteMapping(value="/cart/delete/{userId}/{productId}")
-    public CartDto removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") Integer productId)
+    public CartReturn removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") Integer productId)
     {
 
-        CartDto returnDto=null;
+//        CartDto returnDto=null;
 //        BeanUtils.copyProperties(cartService.removeCard(userId,productId),returnDto);
-        return returnDto;
+        return cartService.removeCard(userId,productId);
+
     }
 
     @PostMapping(value="/cart/add")
-    public void addCard(@RequestBody Cart cartDto)
+    public CartReturn addCard(@RequestBody Cart cartDto)
     {
-          Cart cart=new Cart();
+//          Cart cart=new Cart();
 //        BeanUtils.copyProperties(cartDto,cart);
-          cartService.addCard(cartDto);
+          return cartService.addCard(cartDto);
     }
 }

@@ -26,52 +26,50 @@ public class CartService {
 
     @Autowired
     CartRepository cartRepository;
-    @Autowired
-    MongoTemplate mongoTemplate;
-    @Autowired
-    MongoOperations mongoOperation;
 
-    public Cart getCart(@PathVariable("id") Integer id)
+
+    public CartReturn getCart(@PathVariable("id") Integer id)
     {
-        return cartRepository.findByUserId(id);
-//        String url="";
-//        RestTemplate restTemplate=new RestTemplate();
-//        return restTemplate.postForObject(url,cart.getCard(),CartReturn.class);
+        Cart cart= cartRepository.findByUserId(id);
+        String url="";
+        RestTemplate restTemplate=new RestTemplate();
+        return restTemplate.postForObject(url,cart.getCard(),CartReturn.class);
     }
 
 
-    public void removeCard(@PathVariable("userId") Integer userId,@PathVariable("productId") Integer productId)
+    public CartReturn removeCard(Integer userId,Integer productId)
     {
-//        List<Cart> cart=cartRepository.findByUserId(userId);
+        Cart cart=cartRepository.findByUserId(userId);
 
-        //function for remove card
-//        List<CartArray> productList=cart.getCard();
-//
-//        for(int i=0;i<productList.size();i++)
-//        {
-//            if(productList.get(i).getProductId()==productId)
-//            {
-//                if(productList.get(i).getQuantity()==1)
-//                    productList.remove(i);
-//                else
-//                    productList.get(i).setQuantity(productList.get(i).getQuantity()-1);
-//            }
-//        }
-//        cart.setCard(productList);
-//        cartRepository.save(cart);
+         List<CartArray> productList=cart.getCard();
+//        System.out.println(productList);
+        for(int i=0;i<productList.size();i++)
+        {
+            if(productList.get(i).getProductId()==productId)
+            {
+                if(productList.get(i).getQuantity()==1)
+                    productList.remove(i);
+                else
+                    productList.get(i).setQuantity(productList.get(i).getQuantity()-1);
+                break;
+            }
+        }
+//        System.out.println(productList);
+         cart.setCard(productList);
+         cartRepository.save(cart);
 
-//        return getCart(userId);
+        return getCart(userId);
     }
 
 
-    public void addCard(Cart cart)
+    public CartReturn addCard(Cart cart)
     {
          Cart newCart=cartRepository.findByUserId(cart.getUserId());
 
          if(newCart!=null) {
             int f=0;
             List<CartArray> productList =newCart.getCard();
-            System.out.println(productList+"\n\n");
+//            System.out.println(productList+"\n\n");
             for (CartArray index : productList) {
 
 
@@ -81,13 +79,14 @@ public class CartService {
                     index.setQuantity(index.getQuantity() + cart.getCard().get(0).getQuantity());
                  }
             }
-            System.out.println(productList);
+//            System.out.println(productList);
             if(f==0)
             productList.add(cart.getCard().get(0));
             cart.setCard(productList);
             cartRepository.save(cart);
         }
             cartRepository.save(cart);
+         return getCart(cart.getUserId());
 
     }
 
