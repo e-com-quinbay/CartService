@@ -31,7 +31,7 @@ public class CartService {
     @Autowired
     MongoOperations mongoOperation;
 
-    public List<Cart> getCart(@PathVariable("id") Integer id)
+    public Cart getCart(@PathVariable("id") Integer id)
     {
         return cartRepository.findByUserId(id);
 //        String url="";
@@ -42,7 +42,7 @@ public class CartService {
 
     public void removeCard(@PathVariable("userId") Integer userId,@PathVariable("productId") Integer productId)
     {
-        List<Cart> cart=cartRepository.findByUserId(userId);
+//        List<Cart> cart=cartRepository.findByUserId(userId);
 
         //function for remove card
 //        List<CartArray> productList=cart.getCard();
@@ -66,82 +66,30 @@ public class CartService {
 
     public void addCard(Cart cart)
     {
-//        cartRepository.sav
+         Cart newCart=cartRepository.findByUserId(cart.getUserId());
 
-        Cart newCart=cartRepository.findByUserId(cart.getUserId());
-
-        List<CartArray> cartArray = newCart.getCard();
-
-        if(cartArray.size()>0) {
+         if(newCart!=null) {
             int f=0;
-//            List<CartArray> productList = cart1.get(0).getCard();
-//            for (CartArray index : productList) {
-//
-//
-//                if (index.getProductId() == cart.getCard().get(0).getProductId())
-//                 {
-//                    f=1;
-//                    index.setQuantity(index.getQuantity() + cart.getCard().get(0).getQuantity());
-//                     }
-//            }
+            List<CartArray> productList =newCart.getCard();
+            System.out.println(productList+"\n\n");
+            for (CartArray index : productList) {
 
-            if(cartArray.contains(cart.getCard().get))
 
-            if(f==1)
-                productList.add(cart.getCard().get(0));
-
+                if (index.getProductId() == cart.getCard().get(0).getProductId())
+                 {
+                    f=1;
+                    index.setQuantity(index.getQuantity() + cart.getCard().get(0).getQuantity());
+                 }
+            }
+            System.out.println(productList);
+            if(f==0)
+            productList.add(cart.getCard().get(0));
             cart.setCard(productList);
-//            System.out.println(cart);
+            cartRepository.save(cart);
+        }
             cartRepository.save(cart);
 
-
-//            {//            Query query = new Query();
-////            query.addCriteria(Criteria.where("userId").is(cart.getUserId()));
-//////            query.fields().include("userId");
-////
-////            Cart userTest2 = mongoOperation.findOne(query, Cart.class);
-////            System.out.println(userTest2);
-////            List<CartArray> a=userTest2.getCard();
-////
-////            System.out.println(a);
-////            a.add(cart.getCard().get(0));
-////            System.out.println(a);
-//////            userTest2.setCard(a);
-//////            System.out.println(userTest2);
-//////            mongoOperation.save(userTest2);
-////            Update update = new Update();
-////            update.set("card", a);
-////            mongoTemplate.updateFirst(query,update,"cart");}
-        }
-        cartRepository.save(cart);
-////        if(getCart(cart.getUserId()).size()>0)
-////        {
-////            Update update = new Update();
-////            update.addToSet("card", cart.getCard());
-////            Criteria criteria = where("userId").is(cart.getUserId());
-////            mongoTemplate.updateFirst(Query.query(criteria), update, "cart");
-////        }
-////        else
-////        {
-////            cartRepository.save(cart);
-////        }
-//        Query query = new Query();
-//        query.addCriteria(Criteria.where("userId").is(cart.getUserId()));
-//        query.fields().include("userId");
-//        Cart userTest2 = mongoOperations.findOne(query, Cart.class);
-//        System.out.println("userTest2 - " + userTest2);
-//
-//        CartArray[] a=userTest2.getCard();
-//        a[a.size]
-
     }
 
 
-    public void addToCart(@RequestBody ProductDto productDto)
-    {
-        int id = productDto.id;
-
-
-
-    }
 }

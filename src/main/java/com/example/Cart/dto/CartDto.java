@@ -12,10 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Document
 public class CartDto {
-    @Id
-    String userId;
-    List<CartContent.CartContent> cart = new ArrayList<>();
+
 }
 
