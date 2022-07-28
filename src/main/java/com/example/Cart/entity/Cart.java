@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 @Document(collection="cart")
 public class Cart {
-//    @Id
+    @Id
     private Integer userId;
-    private CartArray[] card;
+    private List<CartArray> card;
 }

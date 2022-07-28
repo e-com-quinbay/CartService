@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CartRepository extends MongoRepository<Cart,String> {
 
-    public List<Cart> findByUserId(Integer id);
+    Cart findByUserId(Integer id);
 }

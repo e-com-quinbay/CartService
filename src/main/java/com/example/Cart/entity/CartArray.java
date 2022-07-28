@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class CartArray {
     private Integer productId;
-    private int quantity;
+    private Integer quantity;
 }
