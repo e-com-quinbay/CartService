@@ -18,7 +18,7 @@ public class CartController {
     CartService cartService;
 
     @GetMapping(value="/cart/{id}")
-    public CartReturn getCart(@PathVariable("id") Integer id)
+    public Cart getCart(@PathVariable("id") Integer id)
     {
         return cartService.getCart(id);
     }
@@ -39,5 +39,15 @@ public class CartController {
 //          Cart cart=new Cart();
 //        BeanUtils.copyProperties(cartDto,cart);
           return cartService.addCard(cartDto);
+    }
+//    @GetMapping(value = "/cart/order/{userId}/{productId}/{quantiti}")
+    public void reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") Integer productId,@PathVariable(value="quantity") Integer quantity)
+    {
+        cartService.reduceCart(userId,productId,quantity);
+    }
+    @GetMapping(value="/cart/order/{id}")
+    public void clearAll(@PathVariable Integer id)
+    {
+        cartService.clearAll(id);
     }
 }

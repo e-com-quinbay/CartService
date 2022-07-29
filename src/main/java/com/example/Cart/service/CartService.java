@@ -1,22 +1,12 @@
 package com.example.Cart.service;
 
-import com.example.Cart.dto.ProductDto;
 import com.example.Cart.entity.Cart;
 import com.example.Cart.entity.CartArray;
 import com.example.Cart.entity.CartReturn;
 import com.example.Cart.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 
 import java.util.List;
@@ -26,14 +16,17 @@ public class CartService {
 
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    UtilService utilService;
 
 
-    public CartReturn getCart(@PathVariable("id") Integer id)
+    public Cart getCart(@PathVariable("id") Integer id)
     {
         Cart cart= cartRepository.findByUserId(id);
-        String url="";
-        RestTemplate restTemplate=new RestTemplate();
-        return restTemplate.postForObject(url,cart.getCard(),CartReturn.class);
+//        String url="";
+//        RestTemplate restTemplate=new RestTemplate();
+//        return restTemplate.postForObject(url,cart.getCard(),CartReturn.class);
+        return  cart;
     }
 
 
@@ -58,7 +51,8 @@ public class CartService {
          cart.setCard(productList);
          cartRepository.save(cart);
 
-        return getCart(userId);
+//        return getCart(userId);
+        return null;
     }
 
 
@@ -70,25 +64,50 @@ public class CartService {
             int f=0;
             List<CartArray> productList =newCart.getCard();
 //            System.out.println(productList+"\n\n");
-            for (CartArray index : productList) {
+            for (int index=0;index<productList.size();index++) {
 
 
-                if (index.getProductId() == cart.getCard().get(0).getProductId())
+                if (productList.get(index).getProductId() == cart.getCard().get(0).getProductId())
                  {
                     f=1;
-                    index.setQuantity(index.getQuantity() + cart.getCard().get(0).getQuantity());
+                    int qnty=productList.get(index).getQuantity() + cart.getCard().get(0).getQuantity();
+//                    if(utilService.checkForStock(cart.getCard().get(0).getProductId(),qnty)) {
+                        productList.get(index).setQuantity(qnty);
+                        if (productList.get(index).getQuantity() == 0)
+                            productList.remove(index);
+//                    }
+//                    else
+//                        return null;
                  }
             }
-//            System.out.println(productList);
             if(f==0)
             productList.add(cart.getCard().get(0));
             cart.setCard(productList);
             cartRepository.save(cart);
         }
             cartRepository.save(cart);
-         return getCart(cart.getUserId());
-
+//         return getCart(cart.getUserId());
+            return null;
     }
 
+    public void clearAll(Integer id)
+    {
+        Cart newCart=cartRepository.findByUserId(id);
+        List<CartArray> productList =newCart.getCard();
+        productList.clear();
+        newCart.setCard(productList);
+        cartRepository.save(newCart);
+    }
 
+        public void reduceCart(Integer userId,Integer productId,Integer quantity)
+        {
+            Cart cart=cartRepository.findByUserId(userId);
+            List<CartArray> productList=cart.getCard();
+            CartArray newCart=new CartArray();
+            newCart.setProductId(productId);
+            newCart.setQuantity(-quantity);
+            productList.clear();
+            productList.add(newCart);
+            addCard(cart);
+        }
 }
