@@ -19,7 +19,7 @@ public class Order {
     @Id
     private Integer id;
     private Integer userId;
-    private Integer productId;
+    private String productId;
     private Float price;
     private Integer quantity;
     private Float total;

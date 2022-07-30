@@ -30,7 +30,7 @@ public class CartService {
     }
 
 
-    public CartReturn removeCard(Integer userId,Integer productId)
+    public CartReturn removeCard(Integer userId,String productId)
     {
         Cart cart=cartRepository.findByUserId(userId);
 
@@ -38,7 +38,7 @@ public class CartService {
 //        System.out.println(productList);
         for(int i=0;i<productList.size();i++)
         {
-            if(productList.get(i).getProductId()==productId)
+            if(productList.get(i).getProductId().equals(productId))
             {
                 if(productList.get(i).getQuantity()==1)
                     productList.remove(i);
@@ -67,7 +67,7 @@ public class CartService {
             for (int index=0;index<productList.size();index++) {
 
 
-                if (productList.get(index).getProductId() == cart.getCard().get(0).getProductId())
+                if (productList.get(index).getProductId().equals(cart.getCard().get(0).getProductId()))
                  {
                     f=1;
                     int qnty=productList.get(index).getQuantity() + cart.getCard().get(0).getQuantity();
@@ -99,7 +99,7 @@ public class CartService {
         cartRepository.save(newCart);
     }
 
-        public void reduceCart(Integer userId,Integer productId,Integer quantity)
+     public void reduceCart(Integer userId,String productId,Integer quantity)
         {
             Cart cart=cartRepository.findByUserId(userId);
             List<CartArray> productList=cart.getCard();

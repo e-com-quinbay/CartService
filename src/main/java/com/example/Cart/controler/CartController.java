@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
+@CrossOrigin(value ="*")
 public class CartController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class CartController {
     }
 
     @DeleteMapping(value="/cart/delete/{userId}/{productId}")
-    public CartReturn removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") Integer productId)
+    public CartReturn removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") String productId)
     {
 
 //        CartDto returnDto=null;
@@ -41,7 +42,7 @@ public class CartController {
           return cartService.addCard(cartDto);
     }
 //    @GetMapping(value = "/cart/order/{userId}/{productId}/{quantiti}")
-    public void reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") Integer productId,@PathVariable(value="quantity") Integer quantity)
+    public void reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") String productId,@PathVariable(value="quantity") Integer quantity)
     {
         cartService.reduceCart(userId,productId,quantity);
     }

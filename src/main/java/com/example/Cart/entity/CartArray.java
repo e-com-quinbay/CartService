@@ -8,6 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CartArray {
-    private Integer productId;
+    private String productId;
     private Integer quantity;
 }
