@@ -25,7 +25,7 @@ public class CartController {
     }
 
     @DeleteMapping(value="/cart/delete/{userId}/{productId}")
-    public CartReturn removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") String productId)
+    public Cart removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") String productId)
     {
 
 //        CartDto returnDto=null;
@@ -35,16 +35,16 @@ public class CartController {
     }
 
     @PostMapping(value="/cart/add")
-    public CartReturn addCard(@RequestBody Cart cartDto)
+    public Cart addCard(@RequestBody CartDto cartDto)
     {
 //          Cart cart=new Cart();
 //        BeanUtils.copyProperties(cartDto,cart);
           return cartService.addCard(cartDto);
     }
 //    @GetMapping(value = "/cart/order/{userId}/{productId}/{quantiti}")
-    public void reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") String productId,@PathVariable(value="quantity") Integer quantity)
+    public Cart reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") String productId,@PathVariable(value="quantity") Integer quantity)
     {
-        cartService.reduceCart(userId,productId,quantity);
+        return cartService.reduceCart(userId,productId,quantity);
     }
     @GetMapping(value="/cart/order/{id}")
     public void clearAll(@PathVariable Integer id)

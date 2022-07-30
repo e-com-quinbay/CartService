@@ -1,9 +1,6 @@
 package com.example.Cart.entity;
 
-import lombok.Generated;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,6 +12,8 @@ import java.util.ListIterator;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection="cart")
 public class Cart {
     @Id

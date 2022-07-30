@@ -1,5 +1,7 @@
 package com.example.Cart.service;
 
+import com.example.Cart.dto.CartDto;
+import com.example.Cart.dto.ProductDto;
 import com.example.Cart.entity.Cart;
 import com.example.Cart.entity.CartArray;
 import com.example.Cart.entity.CartReturn;
@@ -7,9 +9,10 @@ import com.example.Cart.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.client.RestTemplate;
 
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CartService {
@@ -30,7 +33,7 @@ public class CartService {
     }
 
 
-    public CartReturn removeCard(Integer userId,String productId)
+    public Cart removeCard(Integer userId,String productId)
     {
         Cart cart=cartRepository.findByUserId(userId);
 
@@ -38,7 +41,7 @@ public class CartService {
 //        System.out.println(productList);
         for(int i=0;i<productList.size();i++)
         {
-            if(productList.get(i).getProductId().equals(productId))
+            if(productList.get(i).getProduct().getId().equals(productId))
             {
                 if(productList.get(i).getQuantity()==1)
                     productList.remove(i);
@@ -51,14 +54,15 @@ public class CartService {
          cart.setCard(productList);
          cartRepository.save(cart);
 
-//        return getCart(userId);
-        return null;
+        return getCart(userId);
     }
 
 
-    public CartReturn addCard(Cart cart)
+    public Cart addCard(CartDto cart)
     {
          Cart newCart=cartRepository.findByUserId(cart.getUserId());
+
+         System.out.println(cart);
 
          if(newCart!=null) {
             int f=0;
@@ -67,10 +71,11 @@ public class CartService {
             for (int index=0;index<productList.size();index++) {
 
 
-                if (productList.get(index).getProductId().equals(cart.getCard().get(0).getProductId()))
+                if (productList.get(index).getProduct().getId().equals(cart.getProductId()))
                  {
                     f=1;
-                    int qnty=productList.get(index).getQuantity() + cart.getCard().get(0).getQuantity();
+                    int qnty=productList.get(index).getQuantity() + cart.getQuantity();
+                    System.out.println(qnty);
 //                    if(utilService.checkForStock(cart.getCard().get(0).getProductId(),qnty)) {
                         productList.get(index).setQuantity(qnty);
                         if (productList.get(index).getQuantity() == 0)
@@ -80,14 +85,37 @@ public class CartService {
 //                        return null;
                  }
             }
-            if(f==0)
-            productList.add(cart.getCard().get(0));
-            cart.setCard(productList);
-            cartRepository.save(cart);
+             if(f==0) {
+                 CartArray array = new CartArray();
+                 array.setProduct(getProduct(cart.getProductId()));
+                 array.setQuantity(cart.getQuantity());
+                 productList.add(array);
+             }
+            newCart.setCard(productList);
+
+            cartRepository.save(newCart);
+
+            System.out.println(newCart);
+
+             return getCart(cart.getUserId());
         }
-            cartRepository.save(cart);
-//         return getCart(cart.getUserId());
-            return null;
+
+          CartArray array = new CartArray();
+          array.setProduct(getProduct(cart.getProductId()));
+          array.setQuantity(cart.getQuantity());
+
+            Cart newCart1 = new Cart();
+
+            newCart1.setUserId(cart.getUserId());
+            newCart1.setCard(new ArrayList<>());
+            newCart1.getCard().add(array);
+
+            System.out.println(newCart1);
+
+            cartRepository.save(newCart1);
+
+         return getCart(cart.getUserId());
+
     }
 
     public void clearAll(Integer id)
@@ -99,15 +127,20 @@ public class CartService {
         cartRepository.save(newCart);
     }
 
-     public void reduceCart(Integer userId,String productId,Integer quantity)
+     public Cart reduceCart(Integer userId,String productId,Integer quantity)
         {
-            Cart cart=cartRepository.findByUserId(userId);
-            List<CartArray> productList=cart.getCard();
-            CartArray newCart=new CartArray();
-            newCart.setProductId(productId);
-            newCart.setQuantity(-quantity);
-            productList.clear();
-            productList.add(newCart);
-            addCard(cart);
+                CartDto cart=new CartDto();
+                cart.setProductId(productId);
+                cart.setUserId(userId);
+                cart.setQuantity(-quantity);
+                addCard(cart);
+            return getCart(userId);
         }
+
+      public ProductDto getProduct(String id)
+      {
+          String url="http://10.20.3.120:8080/product/";
+          RestTemplate restTemplate=new RestTemplate();
+          return restTemplate.getForObject(url+id,ProductDto.class);
+      }
 }
