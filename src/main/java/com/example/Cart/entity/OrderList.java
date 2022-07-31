@@ -9,8 +9,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderList {
+
     private String productId;
     private String productName;
     private double price;
     private Integer quantity;
+    private  String[] image;
 }

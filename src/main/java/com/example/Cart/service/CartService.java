@@ -118,11 +118,13 @@ public class CartService {
 
     public void clearAll(Integer id)
     {
-        Cart newCart=cartRepository.findByUserId(id);
-        List<CartArray> productList =newCart.getCard();
-        productList.clear();
-        newCart.setCard(productList);
-        cartRepository.save(newCart);
+        
+         cartRepository.deleteById(id);
+//        Cart newCart=cartRepository.findByUserId(id);
+//        List<CartArray> productList =newCart.getCard();
+//        productList.clear();
+//        newCart.setCard(productList);
+//        cartRepository.save(newCart);
     }
 
      public Cart reduceCart(Integer userId,String productId,Integer quantity)

@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface CartRepository extends MongoRepository<Cart,String> {
+public interface CartRepository extends MongoRepository<Cart,Integer> {
 
     Cart findByUserId(Integer id);
 }

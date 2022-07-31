@@ -1,11 +1,13 @@
 package com.example.Cart.service;
 
 
+import com.example.Cart.dto.ProductDto;
 import com.example.Cart.entity.*;
 import com.example.Cart.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +19,18 @@ public class OrderService {
     OrderRepository orderRepository;
     @Autowired
     UtilService utilService;
-
+    @Autowired
+    CartService cartService;
 
      public Order order(Order order)
     {
 //        if(utilService.checkForStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity())) {
             order.setId(idGenerate() + 1);
             order.setTotal(order.getProducts().get(0).getPrice()*order.getProducts().get(0).getQuantity());
+            order.getProducts().get(0).setImage(getProduct(order.getProducts().get(0).getProductId()).getImage());
+//            order.se
 //            if(utilService.decreaseStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity()))
+             System.out.println(order);
             return orderRepository.save(order);
 //            return true;
 //        }
@@ -46,14 +52,21 @@ public class OrderService {
             item.setProductName(array.get(i).getProduct().getName());
             item.setPrice(array.get(i).getProduct().getPrice());
             item.setQuantity(array.get(i).getQuantity());
+            item.setImage(array.get(i).getProduct().getImage());
             order.getProducts().add(item);
         }
 
         orderRepository.save(order);
+        cartService.clearAll(cart.getUserId());
         return orderRepository.findById(idGenerate());
     }
 
-
+    public ProductDto getProduct(String id)
+    {
+        String url="http://10.20.3.120:8080/product/";
+        RestTemplate restTemplate=new RestTemplate();
+        return restTemplate.getForObject(url+id,ProductDto.class);
+    }
 
 
 

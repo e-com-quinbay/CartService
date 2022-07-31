@@ -25,6 +25,7 @@ public class OrderController {
     @PostMapping()
     public Order order(@RequestBody Order order)
     {
+        System.out.println(order);
        return orderService.order(order);
     }
 

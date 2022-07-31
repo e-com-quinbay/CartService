@@ -25,6 +25,6 @@ public class Order {
 //    private Float price;
 //    private Integer quantity;
     private List<OrderList> products;
-    private double total;
+    private double           total;
 
 }
