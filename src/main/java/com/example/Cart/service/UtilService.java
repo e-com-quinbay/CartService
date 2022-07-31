@@ -6,15 +6,18 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UtilService {
 
-    public Boolean checkForStock(Integer productId,Integer quantity)
+    public Boolean checkForStock(String productId,Integer quantity)
     {
-        String url="";
+        String url="http://://";
         RestTemplate restTemplate=new RestTemplate();
-        return restTemplate.getForObject(url+productId+"/"+quantity,Boolean.class);
+        Integer avail= restTemplate.getForObject(url+productId+"/"+quantity,Integer.class);
+        if(avail<quantity)
+            return false;
+        return true;
     }
-    public Boolean decreaseStock(Integer productId,Integer quantity)
+    public Boolean decreaseStock(String productId,Integer quantity)
     {
-        String url="";
+        String url="http://://";
         RestTemplate restTemplate=new RestTemplate();
         int updatedQnty= restTemplate.getForObject(url+productId+"/"+quantity,Integer.class);
         if(updatedQnty<quantity)

@@ -23,16 +23,21 @@ public class OrderController {
     CartService cartService;
 
     @PostMapping()
-    public void order(@RequestBody Order order)
+    public Order order(@RequestBody Order order)
     {
-       orderService.order(order);
+       return orderService.order(order);
     }
-    @PostMapping(value = "/cart")
-    public  void orderCart(@RequestBody Order order)
+
+
+
+    @GetMapping(value="/cart/{id}")
+    public  Order orderCart(@PathVariable(value="id") Integer id)
     {
-        orderService.order(order);
-        cartService.reduceCart(order.getUserId(),order.getProductId(),order.getQuantity());
+        Cart cart=cartService.getCart(id);
+        return orderService.orderCart(cart);
     }
+
+
     @GetMapping(value = "/myorder/{id}")
     public List<Order> myOrder(@PathVariable(value = "id") Integer id) {
         return orderService.myOrder(id);

@@ -25,11 +25,7 @@ public class CartService {
 
     public Cart getCart(@PathVariable("id") Integer id)
     {
-        Cart cart= cartRepository.findByUserId(id);
-//        String url="";
-//        RestTemplate restTemplate=new RestTemplate();
-//        return restTemplate.postForObject(url,cart.getCard(),CartReturn.class);
-        return  cart;
+     return  cartRepository.findByUserId(id);
     }
 
 
@@ -67,6 +63,7 @@ public class CartService {
          if(newCart!=null) {
             int f=0;
             List<CartArray> productList =newCart.getCard();
+             double total=newCart.getAmount();
 //            System.out.println(productList+"\n\n");
             for (int index=0;index<productList.size();index++) {
 
@@ -75,8 +72,9 @@ public class CartService {
                  {
                     f=1;
                     int qnty=productList.get(index).getQuantity() + cart.getQuantity();
-                    System.out.println(qnty);
-//                    if(utilService.checkForStock(cart.getCard().get(0).getProductId(),qnty)) {
+//                    System.out.println(qnty);
+//                    if(utilService.checkForStock(cart.getProductId(),qnty)) {
+                        total=total+(cart.getQuantity()*getProduct(cart.getProductId()).price);
                         productList.get(index).setQuantity(qnty);
                         if (productList.get(index).getQuantity() == 0)
                             productList.remove(index);
@@ -90,25 +88,25 @@ public class CartService {
                  array.setProduct(getProduct(cart.getProductId()));
                  array.setQuantity(cart.getQuantity());
                  productList.add(array);
+                 total=total+(cart.getQuantity()*getProduct(cart.getProductId()).price);
              }
             newCart.setCard(productList);
-
+            newCart.setAmount(total);
             cartRepository.save(newCart);
-
             System.out.println(newCart);
-
              return getCart(cart.getUserId());
         }
 
-          CartArray array = new CartArray();
-          array.setProduct(getProduct(cart.getProductId()));
-          array.setQuantity(cart.getQuantity());
-
+           CartArray array = new CartArray();
+           array.setProduct(getProduct(cart.getProductId()));
+           array.setQuantity(cart.getQuantity());
+           double total=array.getProduct().getPrice()*cart.getQuantity();
             Cart newCart1 = new Cart();
 
             newCart1.setUserId(cart.getUserId());
             newCart1.setCard(new ArrayList<>());
             newCart1.getCard().add(array);
+            newCart1.setAmount(total);
 
             System.out.println(newCart1);
 

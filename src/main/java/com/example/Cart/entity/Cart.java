@@ -12,11 +12,10 @@ import java.util.ListIterator;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @Document(collection="cart")
 public class Cart {
     @Id
     private Integer userId;
     private List<CartArray> card;
+    private Double amount;
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderRepository extends MongoRepository<Order,String> {
     public List<Order> findByUserId(Integer id);
+    public Order findById(Integer id);
 }
