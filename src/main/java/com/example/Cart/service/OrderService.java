@@ -21,6 +21,8 @@ public class OrderService {
     UtilService utilService;
     @Autowired
     CartService cartService;
+    @Autowired
+    EmailService emailService;
 
      public Order order(Order order)
     {
@@ -30,8 +32,9 @@ public class OrderService {
             order.getProducts().get(0).setImage(getProduct(order.getProducts().get(0).getProductId()).getImage());
 //            order.se
 //            if(utilService.decreaseStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity()))
-             System.out.println(order);
-            return orderRepository.save(order);
+//             System.out.println(order);
+              emailService.sendSimpleMail();
+              return orderRepository.save(order);
 //            return true;
 //        }
 //        return false;
@@ -58,6 +61,7 @@ public class OrderService {
 
         orderRepository.save(order);
         cartService.clearAll(cart.getUserId());
+        emailService.sendSimpleMail();
         return orderRepository.findById(idGenerate());
     }
 

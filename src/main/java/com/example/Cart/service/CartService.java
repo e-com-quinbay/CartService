@@ -4,7 +4,6 @@ import com.example.Cart.dto.CartDto;
 import com.example.Cart.dto.ProductDto;
 import com.example.Cart.entity.Cart;
 import com.example.Cart.entity.CartArray;
-import com.example.Cart.entity.CartReturn;
 import com.example.Cart.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,7 +117,7 @@ public class CartService {
 
     public void clearAll(Integer id)
     {
-        
+
          cartRepository.deleteById(id);
 //        Cart newCart=cartRepository.findByUserId(id);
 //        List<CartArray> productList =newCart.getCard();

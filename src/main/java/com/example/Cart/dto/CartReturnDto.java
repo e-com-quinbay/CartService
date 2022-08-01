@@ -1,6 +1,6 @@
 package com.example.Cart.dto;
 
-import com.example.Cart.entity.OrderList;
+import com.example.Cart.entity.CartArray;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,9 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class OrderDto {
-    private Integer id;
+public class CartReturnDto {
     private Integer userId;
-    private List<OrderList> products;
-    private double total;
+    private List<CartArray> card;
+    private Double amount;
 }

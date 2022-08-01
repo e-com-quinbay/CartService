@@ -1,12 +1,12 @@
 package com.example.Cart.controler;
 
 
+import com.example.Cart.dto.OrderDto;
 import com.example.Cart.entity.Cart;
-import com.example.Cart.entity.CartArray;
-import com.example.Cart.entity.ListOrder;
 import com.example.Cart.entity.Order;
 import com.example.Cart.service.CartService;
 import com.example.Cart.service.OrderService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,19 +23,27 @@ public class OrderController {
     CartService cartService;
 
     @PostMapping()
-    public Order order(@RequestBody Order order)
+    public OrderDto order(@RequestBody OrderDto orderDto)
     {
-        System.out.println(order);
-       return orderService.order(order);
+        System.out.println(orderDto);
+        Order order=new Order();
+        BeanUtils.copyProperties(orderDto,order);
+        order= orderService.order(order);
+        OrderDto returnDto =new OrderDto();
+        BeanUtils.copyProperties(order,orderDto);
+        return orderDto;
     }
 
 
 
     @GetMapping(value="/cart/{id}")
-    public  Order orderCart(@PathVariable(value="id") Integer id)
+    public  OrderDto orderCart(@PathVariable(value="id") Integer id)
     {
         Cart cart=cartService.getCart(id);
-        return orderService.orderCart(cart);
+        Order order= orderService.orderCart(cart);
+        OrderDto returnDto=new OrderDto();
+        BeanUtils.copyProperties(order,returnDto);
+        return  returnDto;
     }
 
 
