@@ -26,18 +26,25 @@ public class OrderService {
 
      public Order order(Order order)
     {
-//        if(utilService.checkForStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity())) {
+        System.out.println(order.getProducts().get(0).getQuantity());
+
+        if(utilService.checkForStock(order.getProducts().get(0).getProductId() , order.getProducts().get(0).getQuantity())) {
+
             order.setId(idGenerate() + 1);
             order.setTotal(order.getProducts().get(0).getPrice()*order.getProducts().get(0).getQuantity());
+            order.getProducts().get(0).setProductName(getProduct(order.getProducts().get(0).getProductId()).getName());
             order.getProducts().get(0).setImage(getProduct(order.getProducts().get(0).getProductId()).getImage());
 //            order.se
-//            if(utilService.decreaseStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity()))
-//             System.out.println(order);
-              emailService.sendSimpleMail();
-              return orderRepository.save(order);
+            if(utilService.decreaseStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity()))
+            {
+//                 System.out.println(order);
+//                 emailService.sendSimpleMail();
+                System.out.println(order+"updated");
+                return orderRepository.save(order);
+            }
 //            return true;
-//        }
-//        return false;
+        }
+        return null;
     }
 
     public Order orderCart(Cart cart)
@@ -71,11 +78,6 @@ public class OrderService {
         RestTemplate restTemplate=new RestTemplate();
         return restTemplate.getForObject(url+id,ProductDto.class);
     }
-
-
-
-
-
 
 
     public Integer idGenerate()

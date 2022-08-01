@@ -31,21 +31,21 @@ public class CartService {
     public Cart removeCard(Integer userId,String productId)
     {
         Cart cart=cartRepository.findByUserId(userId);
-
+        double total=cart.getAmount();
+        System.out.println(cart);
          List<CartArray> productList=cart.getCard();
 //        System.out.println(productList);
         for(int i=0;i<productList.size();i++)
         {
             if(productList.get(i).getProduct().getId().equals(productId))
             {
-                if(productList.get(i).getQuantity()==1)
-                    productList.remove(i);
-                else
-                    productList.get(i).setQuantity(productList.get(i).getQuantity()-1);
+                total-=(productList.get(i).getProduct().getPrice()*productList.get(i).getQuantity());
+                productList.remove(i);
                 break;
             }
         }
 //        System.out.println(productList);
+          cart.setAmount(total);
          cart.setCard(productList);
          cartRepository.save(cart);
 
@@ -72,14 +72,14 @@ public class CartService {
                     f=1;
                     int qnty=productList.get(index).getQuantity() + cart.getQuantity();
 //                    System.out.println(qnty);
-//                    if(utilService.checkForStock(cart.getProductId(),qnty)) {
+                    if(utilService.checkForStock(cart.getProductId(),qnty)) {
                         total=total+(cart.getQuantity()*getProduct(cart.getProductId()).price);
                         productList.get(index).setQuantity(qnty);
                         if (productList.get(index).getQuantity() == 0)
                             productList.remove(index);
-//                    }
-//                    else
-//                        return null;
+                    }
+                    else
+                        return null;
                  }
             }
              if(f==0) {
@@ -126,15 +126,15 @@ public class CartService {
 //        cartRepository.save(newCart);
     }
 
-     public Cart reduceCart(Integer userId,String productId,Integer quantity)
-        {
-                CartDto cart=new CartDto();
-                cart.setProductId(productId);
-                cart.setUserId(userId);
-                cart.setQuantity(-quantity);
-                addCard(cart);
-            return getCart(userId);
-        }
+//     public Cart reduceCart(Integer userId,String productId,Integer quantity)
+//        {
+//                CartDto cart=new CartDto();
+//                cart.setProductId(productId);
+//                cart.setUserId(userId);
+//                cart.setQuantity(-quantity);
+//                addCard(cart);
+//            return getCart(userId);
+//        }
 
       public ProductDto getProduct(String id)
       {

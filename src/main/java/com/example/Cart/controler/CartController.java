@@ -25,10 +25,10 @@ public class CartController {
         return  returnDto;
     }
 
-    @DeleteMapping(value="/cart/delete/{userId}/{productId}")
+    @DeleteMapping(value="/cart/remove/{userId}/{productId}")
     public CartReturnDto removeCard(@PathVariable("userId") Integer userId, @PathVariable("productId") String productId)
     {
-
+        System.out.println(userId);
         Cart cart = cartService.removeCard(userId,productId);
         CartReturnDto returnDto=new CartReturnDto();
         BeanUtils.copyProperties(cart,returnDto);
@@ -40,19 +40,17 @@ public class CartController {
     public CartReturnDto addCard(@RequestBody CartDto cartDto)
     {
         Cart cart =  cartService.addCard(cartDto);
-        CartReturnDto returnDto=new CartReturnDto();
-        BeanUtils.copyProperties(cart,returnDto);
-        return  returnDto;
+
+        if(cart!=null) {
+            CartReturnDto returnDto = new CartReturnDto();
+            BeanUtils.copyProperties(cart, returnDto);
+            return returnDto;
+        }
+        return null;
     }
 
 
-////    @GetMapping(value = "/cart/order/{userId}/{productId}/{quantiti}")
-//    public Cart reduceCart(@PathVariable(value = "userId") Integer userId,@PathVariable(value="productId") String productId,@PathVariable(value="quantity") Integer quantity)
-//    {
-//        return cartService.reduceCart(userId,productId,quantity);
-//    }
-
-    @GetMapping(value="/cart/order/{id}")
+    @GetMapping(value="/cart/clear/{id}")
     public void clearAll(@PathVariable Integer id)
     {
         cartService.clearAll(id);

@@ -25,13 +25,18 @@ public class OrderController {
     @PostMapping()
     public OrderDto order(@RequestBody OrderDto orderDto)
     {
-        System.out.println(orderDto);
+//        System.out.println(orderDto);
+
         Order order=new Order();
         BeanUtils.copyProperties(orderDto,order);
+//        System.out.println(order);
         order= orderService.order(order);
-        OrderDto returnDto =new OrderDto();
-        BeanUtils.copyProperties(order,orderDto);
-        return orderDto;
+        if(order!=null) {
+            OrderDto returnDto;
+            BeanUtils.copyProperties(order, orderDto);
+            return orderDto;
+        }
+        return null;
     }
 
 
