@@ -72,7 +72,7 @@ public class CartService {
                     f=1;
                     int qnty=productList.get(index).getQuantity() + cart.getQuantity();
 //                    System.out.println(qnty);
-                    if(utilService.checkForStock(cart.getProductId(),qnty)) {
+                    if(utilService.checkForStock(cart.getProductId(),qnty)&&qnty>-1) {
                         total=total+(cart.getQuantity()*getProduct(cart.getProductId()).price);
                         productList.get(index).setQuantity(qnty);
                         if (productList.get(index).getQuantity() == 0)
