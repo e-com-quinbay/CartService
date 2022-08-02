@@ -20,9 +20,13 @@ public class CartController {
     public CartReturnDto getCart(@PathVariable("id") Integer id)
     {
         Cart cart= cartService.getCart(id);
-        CartReturnDto returnDto=new CartReturnDto();
-        BeanUtils.copyProperties(cart,returnDto);
-        return  returnDto;
+        System.out.println(cart);
+        if(cart!=null) {
+            CartReturnDto returnDto = new CartReturnDto();
+            BeanUtils.copyProperties(cart, returnDto);
+            return returnDto;
+        }
+        return null;
     }
 
     @DeleteMapping(value="/cart/remove/{userId}/{productId}")
@@ -30,9 +34,15 @@ public class CartController {
     {
         System.out.println(userId);
         Cart cart = cartService.removeCard(userId,productId);
-        CartReturnDto returnDto=new CartReturnDto();
-        BeanUtils.copyProperties(cart,returnDto);
-        return  returnDto;
+        System.out.println(cart);
+        if(cart!=null) {
+            CartReturnDto returnDto = new CartReturnDto();
+            BeanUtils.copyProperties(cart, returnDto);
+            System.out.println(returnDto);
+            return returnDto;
+        }
+
+        return null;
 
     }
 

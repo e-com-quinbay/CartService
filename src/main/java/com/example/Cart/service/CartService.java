@@ -49,6 +49,10 @@ public class CartService {
          cart.setCard(productList);
          cartRepository.save(cart);
 
+         if(productList.size()==0)
+             clearAll(userId);
+
+//        System.out.println(getCart(userId));
         return getCart(userId);
     }
 
@@ -138,7 +142,7 @@ public class CartService {
 
       public ProductDto getProduct(String id)
       {
-          String url="http://10.20.3.120:8080/product/";
+          String url="http://10.20.3.120:8084/product/";
           RestTemplate restTemplate=new RestTemplate();
           return restTemplate.getForObject(url+id,ProductDto.class);
       }
