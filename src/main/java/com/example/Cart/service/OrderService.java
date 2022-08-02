@@ -34,15 +34,13 @@ public class OrderService {
             order.setTotal(order.getProducts().get(0).getPrice()*order.getProducts().get(0).getQuantity());
             order.getProducts().get(0).setProductName(getProduct(order.getProducts().get(0).getProductId()).getName());
             order.getProducts().get(0).setImage(getProduct(order.getProducts().get(0).getProductId()).getImage());
-//            order.se
             if(utilService.decreaseStock(order.getProducts().get(0).getProductId(),order.getProducts().get(0).getQuantity()))
             {
 //                 System.out.println(order);
-//                 emailService.sendSimpleMail();
+                 emailService.sendSimpleMail();
                 System.out.println(order+"updated");
                 return orderRepository.save(order);
             }
-//            return true;
         }
         return null;
     }
